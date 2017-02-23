@@ -1,0 +1,11 @@
+dig,ker,dig ho,dig to,dig po,ker hu,ker tu,ker pu,digf,kerf,digf ho,digf to,digf po,kerf hu,kerf tu,kerf pu
+dig,ker,dig ho,dig to,dig po,ker hu,ker tu,ker po,digf,kerf,digf ho,digf to,digf po,kerf hu,kerf tu,kerf pu
+dig,ker,dig hu,dig to,dig pu,ker hu,ker tu,ker pu,digf,kerf ho,digf ho,digf tu,digf pu,kerf,kerf to,kerf po
+dig,ker,dig po,digf tu,dig pu,ker to,ker tu,kerf pu,digf,kerf to,digf po,digf tu,digf po,kerf to,kerf tu,kerf po
+dig,ker,dig pu,dig tu,dig pu,ker tu,ker tu,ker pu,digf,kerf,digf po,digf to,digf po,kerf to,kerf po,kerf po
+dig,ker,dig pu,dig tu,dig po,ker pu,ker tu,ker po,digf,kerf,digf pu,digf tu,digf pu,kerf to,kerf tu,kerf pu
+dig,ker,dig tu,dig tu,dig po,ker to,ker tu,ker po,digf,kerf,digf tu,digf tu,digf pu,kerf tu,kerf tu,kerf pu
+dig,ker,dig to,dig to,dig po,ker to,ker to,ker po,digf,kerf,digf to,dig tu,digf pu,kerf tu,kerf tu,kerf pu
+dig,ker,dig to,dig tu,dig po,ker to,ker tu,ker po,digf,kerf,digf tu,digf tu,digf pu,kerf,kerf tu,kerf pu
+dig,ker,dig to,dig tu,dig pu,ker to,ker tu,ker pu,digf,kerf,dig to,digf tu,digf pu,kerf,kerf tu,ker pu
+dig,ker,dig to,dig to,dig pu,ker tu,ker to,fer pu,digf,kerf,dig to,digf to,dig pu,kerf tu,kerf to,ker pu
