@@ -8,4 +8,3 @@ This folder contains all of the supplementary materials.
 - statistics.r is an R script which performs the statistical analysis described in section 4. The comments in the scripts explain, inter alia, how the models were selected and how the assumptions were tested.
 - epsilon-graphs.R is an R script which makes the line graphs and the boxplot figures in the article.
 - The archive clean_code.zip contains the full code for the webpage where the experiment was hosted. 
-- The archive suppl_mat.zip. contains all of the above files.
