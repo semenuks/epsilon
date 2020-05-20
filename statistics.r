@@ -117,7 +117,7 @@ fit_lmm <- function(epsilon){
 }
 
 if (ttr) {
-  #TTR ANALYSIS (Section 3.3)
+  #TTR ANALYSIS (Section 3.2)
   measure = "ttr" 
   epsilon <- read_dataset(measure, ver, "log")
   print(measure)
@@ -130,7 +130,7 @@ if (ttr) {
 }
 
 if (ttr_nouns) {
-  #TTR OF NOUNS ONLY (Section 3.4)
+  #TTR OF NOUNS ONLY (Section 3.3)
   measure = "ttr_nouns" 
   epsilon <- read_dataset(measure, ver, "log")
   print(measure)
@@ -145,16 +145,16 @@ if (ttr_nouns) {
 }
 
 if (ttr_verbs) {
-  #TTR OF VERBS ONLY (Section 3.4)
+  #TTR OF VERBS ONLY (Section 3.3)
   measure = "ttr_verbs" 
   epsilon <- read_dataset(measure, ver, "log")
   print(measure)
-  #Fitting the LMM mentioned in 3.4 and described in S6
+  #Fitting the LMM mentioned in 3.3 and described in S6
   fit_lmm(epsilon)
 }
 
 if (ttr_v_affix) {
-  #TTR OF VERB ENDINGS (Section 3.4)
+  #TTR OF VERB ENDINGS (Section 3.3)
   measure = "ttr_v_affix" 
   epsilon <- read_dataset(measure, ver, "log")
   print(measure)
@@ -162,7 +162,7 @@ if (ttr_v_affix) {
 }
 
 if (ttr_v_stem) {
-  #TTR OF VERB STEMS (Section 3.4)
+  #TTR OF VERB STEMS (Section 3.3)
   measure = "ttr_v_stem" 
   epsilon <- read_dataset(measure, ver, "log")
   print(measure)
@@ -170,7 +170,7 @@ if (ttr_v_stem) {
 }
 
 if (fidelity){
-  #Transmission fidelity (Section 3.2)
+  #Transmission fidelity (Section 3.1)
   measure = "fidelity" #=transmission error 
   epsilon <- read_dataset(measure, ver, "log")
   print(measure)
