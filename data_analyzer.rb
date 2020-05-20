@@ -30,7 +30,7 @@ expr_verb_lex = []
 CONTACT_LENGTH = 3 #generations 2, 3, 4
 
 #defining methods
-def ttr_within_verbs(language) # see 3.4
+def ttr_within_verbs(language) # see 3.3
   delete_empty_strings = true
   markers_verb1 = []
   markers_verb2 = []
