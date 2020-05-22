@@ -4,5 +4,5 @@ This repository contains the experimental results and the code we used to analyz
 - The folder Measures contains the output of data_analyzer.rb (a separate csv file for every measure and every condition, files v364*.csv).
 - The folder Languages contains all the 495 languages (files lang*.csv) and basic data (file rough_data2.csv) about the participants. data_analyzer.rb uses these data as input.
 - statistics.r is an R script which performs the statistical analysis described in section 4. The comments in the scripts explain, inter alia, how the models were selected and how the assumptions were tested.
-- epsilon-graphs.R is an R script which makes the line graphs and the boxplot figures in the article.
+- epsilon-graphs.R is an R script which creates the figures in the article.
 - The archive clean_code.zip contains the full code for the webpage where the experiment was hosted. 
