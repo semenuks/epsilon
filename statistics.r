@@ -2,10 +2,8 @@
 
 #which measures should be analyzed
 ttr = TRUE
-ttr_nouns = FALSE
-ttr_verbs = FALSE
-ttr_v_stem = FALSE
-ttr_v_affix = FALSE
+ttr_vmorpheme = FALSE
+ttr_pos = FALSE
 fidelity = FALSE
 expressibility = FALSE
 
@@ -51,10 +49,23 @@ read_dataset <- function(measure, ver, transformation){
   return(epsilon)
 }
 
-fit_lmm <- function(epsilon){
+fit_lmm <- function(epsilon, special=""){
   #The maximal model
-  bestmodel <-  lmer(mvalue2 ~ generation*condition2 + (1+generation|chain2), data = epsilon, REML = TRUE)
-  
+
+  if (special == "vmorpheme"){
+    #bestmodel <-  lmer(mvalue2 ~ generation*condition2*morpheme + (1+generation|chain2), data = epsilon, REML = TRUE)
+    bestmodel <-  lmer(mvalue2 ~ generation*condition2*morpheme + (0+generation|chain2) + (1|chain2), data = epsilon, REML = TRUE)
+    #bestmodel <-  lmer(mvalue2 ~ generation*condition2 +generation*morpheme + generation:condition2:morpheme + (1+generation|chain2), data = epsilon, REML = TRUE)
+  } else if (special == "pos"){
+    #bestmodel <- lmer(mvalue2 ~ generation*condition2*pos + (1+generation|chain2), data = epsilon, REML = TRUE)
+    #bestmodel <- lmer(mvalue2 ~ generation*condition2*pos + (1|chain2), data = epsilon, REML = TRUE)
+    bestmodel <- lmer(mvalue2 ~ generation*condition2*pos + (0 + generation|chain2) + (1|chain2), data = epsilon, REML = TRUE)
+    #bestmodel <-  lmer(mvalue2 ~ generation + generation:condition2 + generation:pos + generation:condition2:pos + (1+generation|chain2), data = epsilon, REML = TRUE)
+    #bestmodel <-  lmer(mvalue2 ~ generation + generation:pos + generation:condition2:pos + (1+generation|chain2), data = epsilon, REML = TRUE)
+  } else {
+    bestmodel <-  lmer(mvalue2 ~ generation*condition2 + (1+generation|chain2), data = epsilon, REML = TRUE)
+  }
+
   print(summary(bestmodel))
   print(confint(bestmodel,"beta_")) #profile confidence intervals
   
@@ -74,6 +85,7 @@ fit_lmm <- function(epsilon){
   #the residuals are not normally distributed. Gelman and Hill (2007: 46) describe the assumption of the normality of residuals as "least important", and for the purpose of estimating the regression line even "barely important".
   
   #Do we have influential data points? 
+  if (2==3) {
   coefs = summary(bestmodel)$coefficients[,1] #original coefficients
   coefs <- sort(coefs)
   maxdiffs = numeric(length(coefs))
@@ -114,6 +126,7 @@ fit_lmm <- function(epsilon){
   print(maxdiffs)
   #on the relative scale:
   print(maxdiffs/coefs)  
+  }
 }
 
 if (ttr) {
@@ -153,6 +166,19 @@ if (ttr_verbs) {
   fit_lmm(epsilon)
 }
 
+if (ttr_pos) {
+  measure = "ttr_nouns" 
+  epsilon1 <- read_dataset(measure, ver, "log")
+  epsilon1$pos <- "noun"
+  measure = "ttr_verbs" 
+  epsilon2 <- read_dataset(measure, ver, "log")
+  epsilon2$pos <- "verb"
+  epsilon = rbind(epsilon1, epsilon2)
+  print("ttr_pos")
+  fit_lmm(epsilon,"pos")
+}
+
+
 if (ttr_v_affix) {
   #TTR OF VERB ENDINGS (Section 3.3)
   measure = "ttr_v_affix" 
@@ -168,6 +194,20 @@ if (ttr_v_stem) {
   print(measure)
   fit_lmm(epsilon)
 }
+
+
+if (ttr_vmorpheme){
+  measure = "ttr_v_affix" 
+  epsilon1 <- read_dataset(measure, ver, "log")
+  epsilon1$morpheme <- "affix"
+  measure = "ttr_v_stem" 
+  epsilon2 <- read_dataset(measure, ver, "log")
+  epsilon2$morpheme <- "_stem"
+  epsilon = rbind(epsilon1, epsilon2)
+  print("ttr_vmorpheme")
+  fit_lmm(epsilon,"vmorpheme")
+}
+
 
 if (fidelity){
   #Transmission fidelity (Section 3.1)
