@@ -243,7 +243,7 @@ ggplot(ttr_v_stem_v_affix_ddplot,aes(x=generation,y=mean)) + geom_point(size = 5
 
 causal_graph = read.csv('CausalLinksEpsilon.csv')
 
-causal_graph_gg_points = data.frame(Var1 = unique(c(as.character(causal_graph$Var1),as.character(causal_graph$Var2))), labels = c("adult\nlanguage learners","\nimperfect learning", "\naccumulation of mutations","\nredundancy","\nlong-distance dependency","morphological complexity:\noverspecification"), x = c(0,1,1,1,1,2), y = c(4,4,3,2,1,2.5))
+causal_graph_gg_points = data.frame(Var1 = unique(c(as.character(causal_graph$Var1),as.character(causal_graph$Var2))), labels = c("adult\nlanguage learners","\nimperfect learning", "\naccumulation of mutations","\nredundancy","\nlong-distance dependency","salience","overspecification:\nsimplification rate"), x = c(0,1,1,1,1,0,2), y = c(4,4,3,2,1,3,2.5))
 
 causal_graph_gg_arrows = join(causal_graph_gg_points,causal_graph[,c('Var1','Var2','Cor','Confirmed')], by = 'Var1')
 temp = causal_graph_gg_points[,c(1,3,4)]
@@ -256,7 +256,7 @@ causal_graph_gg_arrows$Relationship = ifelse(causal_graph_gg_arrows$Relationship
 causal_graph_gg_arrows$Confirmed = factor(ifelse(causal_graph_gg_arrows$Confirmed == 'yes','yes','no'), levels = c('yes','no'))
 
 
-ggplot() + geom_point(data = causal_graph_gg_points, aes(x = x, y = y-0.05), size = 10) + geom_segment(data = causal_graph_gg_arrows, aes(x = x+0.10, xend = x2-0.10, y = y-0.05, yend = y2-0.05, color = Relationship, linetype = Confirmed), arrow = grid::arrow(length = grid::unit(0.6,"cm"), type = 'closed')) + geom_text(data = causal_graph_gg_points, aes(x = x, y = y+0.35, label = labels), size = 6) + theme_minimal() + theme(text = element_text(size = 16), legend.position = "bottom", axis.text = element_blank(), axis.title = element_blank(), axis.line = element_blank(), panel.grid = element_blank()) + scale_x_continuous("", limits = c(-0.5,2.5)) + scale_y_continuous("", limits = c(0.85,4.50)) + scale_colour_manual(values = c('red','purple')) + scale_linetype_manual(values = c('solid','dotted'))
+print(ggplot() + geom_point(data = causal_graph_gg_points, aes(x = x, y = y-0.05), size = 10) + geom_segment(data = causal_graph_gg_arrows, aes(x = x+0.10, xend = x2-0.10, y = y-0.05, yend = y2-0.05, color = Relationship, linetype = Confirmed), arrow = grid::arrow(length = grid::unit(0.6,"cm"), type = 'closed')) + geom_text(data = causal_graph_gg_points, aes(x = x, y = y+0.35, label = labels), size = 6) + theme_minimal() + theme(text = element_text(size = 16), legend.position = "bottom", axis.text = element_blank(), axis.title = element_blank(), axis.line = element_blank(), panel.grid = element_blank()) + scale_x_continuous("", limits = c(-0.5,2.5)) + scale_y_continuous("", limits = c(0.85,4.50)) + scale_colour_manual(values = c('red','purple')) + scale_linetype_manual(values = c('solid','dotted')))
 
 ######
 
