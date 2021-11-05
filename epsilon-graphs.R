@@ -2,6 +2,7 @@
 ######
 library(ggplot2)
 library(plyr)
+library(Rcpp)
 
 se = function(x, na.rm = FALSE) {
   n = ifelse(na.rm, sum(!is.na(x)), length(x))
@@ -86,7 +87,6 @@ giveCondition = function(file_name) {
 ######
 
 temp_files = file_list[grep('fidelity',file_list)]
-
 for (i in temp_files) {
   temp = read.table(i, header=F, sep=";", dec=".", col.names = c("chain","generation","mvalue"), skip=1)
   temp$cond = giveCondition(i)
@@ -243,7 +243,7 @@ ggplot(ttr_v_stem_v_affix_ddplot,aes(x=generation,y=mean)) + geom_point(size = 5
 
 causal_graph = read.csv('CausalLinksEpsilon.csv')
 
-causal_graph_gg_points = data.frame(Var1 = unique(c(as.character(causal_graph$Var1),as.character(causal_graph$Var2))), labels = c("adult\nlanguage learners","\nimperfect learning", "\naccumulation of mutations","\nredundancy","\nlong-distance dependency","morphological complexity:\noverspecification"), x = c(0,1,1,1,1,2), y = c(4,4,3,2,1,2.5))
+causal_graph_gg_points = data.frame(Var1 = unique(c(as.character(causal_graph$Var1),as.character(causal_graph$Var2))), labels = c("adult\nlanguage learners","\nimperfect learning", "\naccumulation of mutations","\nredundancy","\nlong-distance dependency","salience","overspecification:\nsimplification rate"), x = c(0,1,1,1,1,0,2), y = c(4,4,3,2,1,3,2.5))
 
 causal_graph_gg_arrows = join(causal_graph_gg_points,causal_graph[,c('Var1','Var2','Cor','Confirmed')], by = 'Var1')
 temp = causal_graph_gg_points[,c(1,3,4)]
@@ -256,7 +256,7 @@ causal_graph_gg_arrows$Relationship = ifelse(causal_graph_gg_arrows$Relationship
 causal_graph_gg_arrows$Confirmed = factor(ifelse(causal_graph_gg_arrows$Confirmed == 'yes','yes','no'), levels = c('yes','no'))
 
 
-ggplot() + geom_point(data = causal_graph_gg_points, aes(x = x, y = y-0.05), size = 10) + geom_segment(data = causal_graph_gg_arrows, aes(x = x+0.10, xend = x2-0.10, y = y-0.05, yend = y2-0.05, color = Relationship, linetype = Confirmed), arrow = grid::arrow(length = grid::unit(0.6,"cm"), type = 'closed')) + geom_text(data = causal_graph_gg_points, aes(x = x, y = y+0.35, label = labels), size = 6) + theme_minimal() + theme(text = element_text(size = 16), legend.position = "bottom", axis.text = element_blank(), axis.title = element_blank(), axis.line = element_blank(), panel.grid = element_blank()) + scale_x_continuous("", limits = c(-0.5,2.5)) + scale_y_continuous("", limits = c(0.85,4.50)) + scale_colour_manual(values = c('red','purple')) + scale_linetype_manual(values = c('solid','dotted'))
+print(ggplot() + geom_point(data = causal_graph_gg_points, aes(x = x, y = y-0.05), size = 10) + geom_segment(data = causal_graph_gg_arrows, aes(x = x+0.10, xend = x2-0.10, y = y-0.05, yend = y2-0.05, color = Relationship, linetype = Confirmed), arrow = grid::arrow(length = grid::unit(0.6,"cm"), type = 'closed')) + geom_text(data = causal_graph_gg_points, aes(x = x, y = y+0.35, label = labels), size = 6) + theme_minimal() + theme(text = element_text(size = 16), legend.position = "bottom", axis.text = element_blank(), axis.title = element_blank(), axis.line = element_blank(), panel.grid = element_blank()) + scale_x_continuous("", limits = c(-0.5,2.5)) + scale_y_continuous("", limits = c(0.85,4.50)) + scale_colour_manual(values = c('red','purple')) + scale_linetype_manual(values = c('solid','dotted')))
 
 ######
 
@@ -311,7 +311,7 @@ underspec[,3] = as.numeric(as.character(underspec[,3]))
 
 underspec_ddplot = ddply(underspec, c('cond', 'generation'), summarise, mean = mean(mvalue), se = se(mvalue), sd = sd(mvalue))
 
-ggplot(underspec_ddplot,aes(x=generation,y=mean)) + geom_point(size = 5,aes(colour=cond,shape=cond)) + geom_line(aes(colour=cond)) + geom_ribbon(aes(ymax = mean+se, ymin = mean-se, fill=cond), alpha = 0.1) + scale_x_continuous('Generation',breaks = c(0,1,2,3,4,5,6,7,8,9,10), limits = c(0,10)) + theme_minimal()  + scale_colour_manual('Transmission', values = c('blue','darkgreen','red'), labels = c('Normal','Temporarily interrupted','Permanently interrupted')) + scale_linetype_manual('Transmission', labels = c('Normal','Temporarily interrupted','Permanently interrupted'), values = c('solid','dashed','dotted')) + scale_shape_manual('Transmission', labels = c('Normal','Temporarily interrupted','Permanently interrupted'), values = c(16,17,15)) + scale_fill_manual('Transmission', values = c('blue','darkgreen','red'), labels = c('Normal','Temporarily interrupted','Permanently interrupted')) + guides(colour = guide_legend(label.position = "top", title.hjust = 0.5)) + theme(text = element_text(size = 16)) + scale_y_continuous("Comprehension rate", limits = c(0,0.25))
+ggplot(underspec_ddplot,aes(x=generation,y=mean)) + geom_point(size = 5,aes(colour=cond,shape=cond)) + geom_line(aes(colour=cond)) + geom_ribbon(aes(ymax = mean+se, ymin = mean-se, fill=cond), alpha = 0.1) + scale_x_continuous('Generation',breaks = c(0,1,2,3,4,5,6,7,8,9,10), limits = c(0,10)) + theme_minimal()  + scale_colour_manual('Transmission', values = c('blue','darkgreen','red'), labels = c('Normal','Temporarily interrupted','Permanently interrupted')) + scale_linetype_manual('Transmission', labels = c('Normal','Temporarily interrupted','Permanently interrupted'), values = c('solid','dashed','dotted')) + scale_shape_manual('Transmission', labels = c('Normal','Temporarily interrupted','Permanently interrupted'), values = c(16,17,15)) + scale_fill_manual('Transmission', values = c('blue','darkgreen','red'), labels = c('Normal','Temporarily interrupted','Permanently interrupted')) + guides(colour = guide_legend(label.position = "top", title.hjust = 0.5)) + theme(text = element_text(size = 16)) + scale_y_continuous("Underspecification", limits = c(0,0.25))
 
 ######
 
@@ -320,7 +320,7 @@ ggplot(underspec_ddplot,aes(x=generation,y=mean)) + geom_point(size = 5,aes(colo
 ######
 
 
-## >> Figure S3. Change of the expressibility of the four categories over time.
+## >> Figure S5. Change of the expressibility of the four categories over time.
 ######
 temp_files = file_list[grep('expr_noun_lex',file_list)]
 
@@ -403,7 +403,7 @@ ggplot(expr_4_ddplot,aes(x=generation,y=mean)) + geom_point(size = 5,aes(colour=
 ######
 
 
-## >> Figure S4. Change of transmission fidelity over time.
+## >> Figure S3. Change of transmission fidelity over time.
 ######
 temp_files = file_list[grep('fidelity',file_list)]
 
@@ -429,3 +429,28 @@ ggplot(fidelity_ddplot,aes(x=generation,y=mean)) + geom_point(size = 5,aes(colou
 
 ######
 
+## >> Figure S4. Change of entropy over time.
+######
+temp_files = file_list[grep('entropy',file_list)]
+
+if (! ('entropy' %in% ls())) {
+  for (i in temp_files) {
+    temp = read.table(i, header=F, sep=";", dec=".", col.names = c("chain","generation","mvalue"), skip=1)
+    temp$cond = giveCondition(i)
+    if ('entropy' %in% ls()) {
+      entropy = rbind(entropy,temp)
+    } else {
+      entropy = temp
+    }
+  }
+  entropy[,1] = as.integer(as.character(entropy[,1]))
+  entropy[,2] = as.integer(as.character(entropy[,2]))
+  entropy[,3] = as.numeric(as.character(entropy[,3]))
+  
+}
+
+entropy_ddplot = ddply(entropy, c('cond', 'generation'), summarise, mean = mean(mvalue), se = se(mvalue), sd = sd(mvalue))
+
+ggplot(entropy_ddplot,aes(x=generation,y=mean)) + geom_point(size = 5,aes(colour=cond,shape=cond)) + geom_line(aes(colour=cond)) + geom_ribbon(aes(ymax = mean+se, ymin = mean-se, fill=cond), alpha = 0.1) + scale_x_continuous('Generation',breaks = c(0,1,2,3,4,5,6,7,8,9,10), limits = c(0,10)) + theme_minimal()  + scale_colour_manual('Transmission', values = c('blue','darkgreen','red'), labels = c('Normal','Temporarily interrupted','Permanently interrupted')) + scale_linetype_manual('Transmission', labels = c('Normal','Temporarily interrupted','Permanently interrupted'), values = c('solid','dashed','dotted')) + scale_shape_manual('Transmission', labels = c('Normal','Temporarily interrupted','Permanently interrupted'), values = c(16,17,15)) + scale_fill_manual('Transmission', values = c('blue','darkgreen','red'), labels = c('Normal','Temporarily interrupted','Permanently interrupted')) + guides(colour = guide_legend(label.position = "top", title.hjust = 0.5)) + theme(text = element_text(size = 16)) + scale_y_continuous("Entropy")
+
+######

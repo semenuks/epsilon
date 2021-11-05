@@ -351,7 +351,7 @@ i = 0
 previouslanguage = [] #stored for comparisons (Levenshtein etc.)
 
 fmeasures_to_output = {}
-measures_to_output = ["ttr","fidelity","ttr_verbs","ttr_nouns", "ttr_v_stem", "ttr_v_affix", "comprehension_rate", "underspecification", "expr_verb_gender", "expr_noun_number", "expr_noun_lex", "expr_verb_lex"] #this line specifies for which measures the output files will be provided
+measures_to_output = ["ttr","fidelity","ttr_verbs","ttr_nouns", "ttr_v_stem", "ttr_v_affix", "comprehension_rate", "underspecification", "expr_verb_gender", "expr_noun_number", "expr_noun_lex", "expr_verb_lex", "entropy"] #this line specifies for which measures the output files will be provided
 
 measures_to_output.each do |measure| #creating necessary output files
   fmeasures_to_output[measure] = {}
@@ -362,6 +362,24 @@ measures_to_output.each do |measure| #creating necessary output files
     mfile.puts "chain;generation;mvalue"
   end
 end
+
+def hashentropy(hash,total)
+  entr = 0.0
+  #normalizer=hash.keys.length
+  #if normalizer > 1
+  if total > 1  
+	hash.each_value do |v|
+      if v > 0
+	    entr += v/total*Math.log2(v/total)
+	  end
+    end
+  end
+  entr = -entr#/Math.log2(normalizer) 
+  #end
+  return entr
+end
+
+
 
 #MAIN CYCLE through the generations
 rough.each_line do |line| #reading from the file with the data about participants
@@ -423,9 +441,21 @@ rough.each_line do |line| #reading from the file with the data about participant
 	comprehension_rate[i] = (alldata[4][i].to_f/languages[i].length).round(3)
 	vmeasures_to_output["comprehension_rate"]=comprehension_rate[i]
 	wordforms = language_to_wordforms(languages[i])
+
+    
+
     allwordforms = wordforms[0]
     nounwordforms = wordforms[1]
     verbwordforms = wordforms[2]
+
+#Entropy
+    entropyhash = Hash.new(0.0)
+    total = 0.0
+    allwordforms.each do |wordform|
+        entropyhash[wordform] += 1
+        total += 1
+    end
+    vmeasures_to_output["entropy"] = hashentropy(entropyhash, total)
 	
 #Underspecification (share of ambiguous signals)
     sent_ambiguity[i]=ambiguity(languages[i])
@@ -502,3 +532,4 @@ fmeasures_to_output.each_value do |measure|
     mfile.close
   end
 end
+
